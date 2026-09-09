@@ -1,0 +1,25 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab12"
+# vnet_name           = "vnet-lab12"
+# vnet_address_space  = "10.120.0.0/16"
+# cluster_name        = "aks-lab12"
+
+# node_count = 2
+# node_size  = "Standard_D2s_v5"
+
+# The three ranges. Only the node subnet comes out of the VNet - pod_cidr and
+# service_cidr are invisible outside the cluster and may overlap other clusters.
+# They must not overlap this VNet, any peered network, on-premises, or anything
+# the pods need to reach.
+# pod_cidr       = "192.168.0.0/16"
+# service_cidr   = "172.16.0.0/16"
+# dns_service_ip = "172.16.0.10"    # must be INSIDE service_cidr
+
+# Set true to attempt a pod CIDR that overlaps the VNet, and see what Azure says.
+# Worth doing once so you recognise the error.
+# overlapping_pod_cidr = false
+
+# deploy_bastion = true

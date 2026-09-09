@@ -1,0 +1,27 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab08"
+
+# The complete list of hostnames the spoke may reach. Everything else is denied
+# by the implicit default - you never write a deny rule.
+# allowed_fqdns = [
+#   "archive.ubuntu.com",
+#   "security.ubuntu.com",
+#   "login.microsoftonline.com",
+# ]
+
+# Reachable through a network rule instead of an application rule, so you can
+# compare AZFWNetworkRule against AZFWApplicationRule for the same kind of
+# request.
+# network_rule_destination = "1.1.1.1"
+
+# Set true to add a network rule allowing all of TCP 443. Network rules are
+# evaluated before application rules, so this disables the entire FQDN
+# allow-list without changing a single application rule, and without any error
+# or warning anywhere. This is how FQDN filtering quietly stops working in real
+# estates.
+# add_broad_network_rule = false
+
+# deploy_bastion = true

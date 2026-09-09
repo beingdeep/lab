@@ -1,0 +1,138 @@
+# Lab 11 - plan, publish, gate, apply the reviewed plan.
+#
+# Copy to .github/workflows/deploy.yml. Uses the federated identity from Lab 10,
+# so there is no stored credential. Set as repository variables:
+#   AZURE_CLIENT_ID_PLAN    an identity with Reader on the target scope
+#   AZURE_CLIENT_ID_APPLY   an identity with Contributor on the target scope
+#   AZURE_TENANT_ID
+#   AZURE_SUBSCRIPTION_ID
+
+name: infrastructure
+
+on:
+  pull_request:
+    paths: ['solution/**']
+  push:
+    branches: [main]
+    paths: ['solution/**']
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TF_DIR: solution
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # A plan needs to read current state to compute a diff. It never needs to
+  # write. Running plan with write credentials means every pull request anybody
+  # can open executes with production write access.
+  # ---------------------------------------------------------------------------
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID_PLAN }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Init
+        working-directory: ${{ env.TF_DIR }}
+        run: terraform init
+
+      # -out pins the exact set of changes. Without it, the apply job would plan
+      # again and apply whatever it found, and the approval would refer to a plan
+      # nobody ever ran.
+      - name: Plan
+        working-directory: ${{ env.TF_DIR }}
+        env:
+          ARM_USE_OIDC: true
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        run: terraform plan -input=false -out=tfplan
+
+      - name: Render the plan for humans
+        working-directory: ${{ env.TF_DIR }}
+        run: terraform show -no-color tfplan > plan.txt
+
+      # "1 to destroy" is one line in four hundred, and reviewers approve long
+      # plans at five o'clock on a Friday. If the number is machine-checkable,
+      # check it with a machine.
+      - name: Refuse destructive changes unless explicitly allowed
+        if: ${{ !contains(github.event.head_commit.message, '[allow-destroy]') }}
+        working-directory: ${{ env.TF_DIR }}
+        run: |
+          destroys=$(terraform show -json tfplan \
+            | jq '[.resource_changes[] | select(.change.actions[] | . == "delete")] | length')
+          echo "resources to be destroyed: $destroys"
+          if [ "$destroys" -gt 0 ]; then
+            echo "::error::This plan destroys $destroys resource(s)."
+            echo "::error::Add [allow-destroy] to the commit message if that is intended."
+            exit 1
+          fi
+
+      # The artefact is the evidence. "We reviewed it" is an assertion; a stored
+      # plan attached to a run is a record you can produce a year later.
+      - name: Publish the plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-${{ github.run_id }}
+          path: |
+            ${{ env.TF_DIR }}/tfplan
+            ${{ env.TF_DIR }}/plan.txt
+          retention-days: 30
+
+  # ---------------------------------------------------------------------------
+  # The gate lives on the environment in repository settings, not in this file.
+  # A gate written here could be removed by the same pull request it is supposed
+  # to be gating.
+  #
+  # On the "production" environment, set:
+  #   - required reviewers
+  #   - prevent self-review   <- off by default, and the whole point
+  # ---------------------------------------------------------------------------
+  apply:
+    needs: plan
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID_APPLY }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Retrieve the reviewed plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan-${{ github.run_id }}
+          path: ${{ env.TF_DIR }}
+
+      - name: Init
+        working-directory: ${{ env.TF_DIR }}
+        run: terraform init
+
+      # Applying the saved plan, not planning again. Terraform refuses if the
+      # world no longer matches what was reviewed, which is exactly the safety
+      # property the approval is supposed to provide.
+      - name: Apply the reviewed plan
+        working-directory: ${{ env.TF_DIR }}
+        env:
+          ARM_USE_OIDC: true
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        run: terraform apply -input=false tfplan

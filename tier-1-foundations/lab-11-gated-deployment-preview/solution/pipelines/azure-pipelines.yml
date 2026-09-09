@@ -1,0 +1,98 @@
+# Lab 11 - the Azure DevOps equivalent.
+#
+# The gate lives on the Environment object in Azure DevOps (Pipelines >
+# Environments > production > Approvals and checks), not in this file. Set:
+#   - an Approval check with your reviewers
+#   - "Allow approvers to approve their own runs" turned OFF   <- the point
+#
+# Service connections should use workload identity federation, not a secret.
+
+trigger:
+  branches:
+    include: [main]
+  paths:
+    include: ['solution/*']
+
+pr:
+  branches:
+    include: ['*']
+  paths:
+    include: ['solution/*']
+
+variables:
+  tfDir: solution
+  planServiceConnection: sc-lab11-plan # Reader on the target scope
+  applyServiceConnection: sc-lab11-apply # Contributor on the target scope
+
+stages:
+  - stage: Plan
+    jobs:
+      - job: plan
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: latest
+
+          - task: AzureCLI@2
+            displayName: Plan
+            inputs:
+              azureSubscription: $(planServiceConnection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              workingDirectory: $(tfDir)
+              addSpnToEnvironment: true
+              inlineScript: |
+                set -euo pipefail
+                export ARM_USE_OIDC=true
+                terraform init -input=false
+                terraform plan -input=false -out=tfplan
+                terraform show -no-color tfplan > plan.txt
+
+                destroys=$(terraform show -json tfplan \
+                  | jq '[.resource_changes[] | select(.change.actions[] | . == "delete")] | length')
+                echo "resources to be destroyed: $destroys"
+                if [ "$destroys" -gt 0 ]; then
+                  echo "##vso[task.logissue type=error]This plan destroys $destroys resource(s)."
+                  exit 1
+                fi
+
+          - publish: $(tfDir)
+            artifact: tfplan
+            displayName: Publish the plan as reviewable evidence
+
+  - stage: Apply
+    dependsOn: Plan
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      # A deployment job, not a plain job. That is what binds it to the
+      # Environment and therefore to the approval check.
+      - deployment: apply
+        environment: production
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: tfplan
+
+                - task: TerraformInstaller@1
+                  inputs:
+                    terraformVersion: latest
+
+                - task: AzureCLI@2
+                  displayName: Apply the reviewed plan
+                  inputs:
+                    azureSubscription: $(applyServiceConnection)
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    workingDirectory: $(Pipeline.Workspace)/tfplan
+                    addSpnToEnvironment: true
+                    inlineScript: |
+                      set -euo pipefail
+                      export ARM_USE_OIDC=true
+                      terraform init -input=false
+                      terraform apply -input=false tfplan

@@ -1,0 +1,18 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab09-tfstate"
+# container_name      = "tfstate"
+# identity_name       = "id-tfstate-pipeline"
+
+# Fixed suffix for the globally unique storage account name.
+# name_suffix = "deep09"
+
+# Blob and container soft delete retention, in days. Minimum 7.
+# retention_days = 30
+
+# Set to false to grant the role at account scope instead, and see what that
+# covers: every container that will ever exist on the account, including other
+# teams' state files.
+# scope_role_to_container = true

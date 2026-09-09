@@ -1,0 +1,75 @@
+# Lab 10 - a deployment workflow with no stored credential of any kind.
+#
+# Copy this to .github/workflows/deploy.yml in your repository, and set these
+# three as repository VARIABLES (Settings > Secrets and variables > Actions >
+# Variables). None of them is a secret - they are identifiers:
+#
+#   AZURE_CLIENT_ID
+#   AZURE_TENANT_ID
+#   AZURE_SUBSCRIPTION_ID
+#
+# There is deliberately no AZURE_CREDENTIALS secret and no client-secret input.
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Without id-token: write, GitHub will not mint an OIDC token at all and the
+# login step fails with a confusing "no token" error rather than a permissions
+# one. This is the single most common mistake in this setup.
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # The environment gate. GitHub only issues an environment-scoped token after
+    # any required reviewers have approved, which is what makes the
+    # "repo:owner/repo:environment:production" federated credential meaningful.
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # No client-secret, no creds blob. The action exchanges the OIDC token
+      # GitHub just minted for an Azure access token.
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Show who we are
+        run: |
+          az account show --output table
+          echo "Deploying as an identity that has Contributor on one resource group,"
+          echo "and no credential that anyone can copy."
+
+      - name: Deploy
+        run: |
+          az group show --name rg-lab10 --output table
+
+  # Run this from a branch other than main to see the federation refuse.
+  # It fails at the login step with "No matching federated identity record found
+  # for presented assertion", and the error usually prints the subject it
+  # presented - which is the fastest way to debug a subject mismatch.
+  prove-other-branches-fail:
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Attempt to sign in from the wrong branch
+        continue-on-error: true
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}

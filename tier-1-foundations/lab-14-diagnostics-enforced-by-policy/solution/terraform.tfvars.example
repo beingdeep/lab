@@ -1,0 +1,24 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab14"
+
+# policy_definition_name = "deploy-nsg-diagnostics"
+# assignment_name        = "enforce-nsg-diagnostics"
+
+# Fixed suffix for the globally unique workspace name.
+# name_suffix = "deep14"
+
+# "DoNotEnforce" evaluates and reports compliance without deploying anything,
+# which is how you introduce this to an estate you do not own. Switch to
+# "Default" once you have seen what it would have changed.
+# assignment_enforcement = "Default"
+
+# Creates an NSG after the assignment exists, so Step 6 is a genuine new-resource
+# test rather than something the remediation task picked up.
+# create_test_nsg = true
+
+# Increase if the remediation task fails immediately - role assignments are
+# eventually consistent and the failure message does not mention roles.
+# role_propagation_delay = "60s"

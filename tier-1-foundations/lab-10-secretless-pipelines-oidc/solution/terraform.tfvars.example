@@ -1,0 +1,24 @@
+# Copy to terraform.tfvars. github_owner and github_repo are REQUIRED - the
+# federated credential subjects are built from them and Entra compares them as
+# literal strings.
+
+github_owner = "your-github-org-or-user"
+github_repo  = "your-repo-name"
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab10"
+# identity_name       = "id-deploy-lab10"
+
+# The single branch and the single environment permitted to authenticate.
+# github_branch      = "main"
+# github_environment = "production"
+
+# Set true to build the broken version: a credential that also accepts pull
+# request runs, including pull requests opened by people who cannot merge. Your
+# "wrong branch fails" test then stops failing. That is the mistake this lab
+# exists to prevent.
+# use_wildcard_subject = false
+
+# Not Owner. Owner includes creating role assignments, which lets the pipeline
+# grant itself anything it likes.
+# role_definition_name = "Contributor"

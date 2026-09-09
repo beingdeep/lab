@@ -1,0 +1,20 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab07"
+# vnet_name           = "vnet-lab07"
+
+# Fixed suffix for the globally unique web app and Key Vault names.
+# name_suffix = "deep07"
+
+# Set to "Detection" and re-apply to watch the injection payload sail straight
+# through while the WAF dutifully logs it. One word, and the gateway protects
+# nothing. Worth seeing once.
+# waf_mode = "Prevention"
+
+# certificate_subject = "CN=lab07.local"
+
+# Increase if certificate creation fails with a permissions error - role
+# assignments are eventually consistent and 60 seconds is not always enough.
+# role_propagation_delay = "60s"

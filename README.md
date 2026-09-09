@@ -77,7 +77,7 @@ see the failure mode the lab is teaching.
 
 | | Labs | Instructions | Terraform | Validation |
 | --- | --- | --- | --- | --- |
-| Tier 1 - Foundations | 14 | 01-03 | 01-03 | 01-03 |
+| Tier 1 - Foundations | 14 | 01-14 | 01-14 | 01-14 |
 | Tier 2 - Intermediate | 16 | - | - | - |
 | Tier 3 - Advanced | 14 | - | - | - |
 | Tier 4 - Expert | 12 | - | - | - |
@@ -93,17 +93,17 @@ Deceptively simple. Every one of these has a detail that fails silently if you s
 | 01 | [Fully Private Web App with a Locked-Down Jump VM](tier-1-foundations/lab-01-private-web-app-jump-vm/) | Ready |
 | 02 | [Hub and Spoke with a Shared Services Spoke](tier-1-foundations/lab-02-hub-spoke-shared-services/) | Ready |
 | 03 | [Private DNS Resolution Across Peered Networks](tier-1-foundations/lab-03-private-dns-across-peerings/) | Ready |
-| 04 | [Three-Tier Segmentation with Application Security Groups](tier-1-foundations/lab-04-three-tier-asg-segmentation/) | Problem only |
-| 05 | [Storage Account with No Public Surface](tier-1-foundations/lab-05-storage-no-public-surface/) | Problem only |
-| 06 | [Key Vault with RBAC and Identity-Only Access](tier-1-foundations/lab-06-key-vault-rbac-identity-only/) | Problem only |
-| 07 | [Application Gateway with WAF in Front of a Private App](tier-1-foundations/lab-07-app-gateway-waf-private-app/) | Problem only |
-| 08 | [Egress Control with Azure Firewall](tier-1-foundations/lab-08-egress-control-azure-firewall/) | Problem only |
-| 09 | [Terraform Remote State Done Properly](tier-1-foundations/lab-09-terraform-remote-state/) | Problem only |
-| 10 | [Secretless Pipelines with Workload Identity Federation](tier-1-foundations/lab-10-secretless-pipelines-oidc/) | Problem only |
-| 11 | [Gated Infrastructure Deployment with Preview](tier-1-foundations/lab-11-gated-deployment-preview/) | Problem only |
-| 12 | [Private AKS Cluster](tier-1-foundations/lab-12-private-aks-cluster/) | Problem only |
-| 13 | [Self-Hosted Build Agents Inside a Private Network](tier-1-foundations/lab-13-self-hosted-build-agents/) | Problem only |
-| 14 | [Diagnostics Enforced by Policy](tier-1-foundations/lab-14-diagnostics-enforced-by-policy/) | Problem only |
+| 04 | [Three-Tier Segmentation with Application Security Groups](tier-1-foundations/lab-04-three-tier-asg-segmentation/) | Ready |
+| 05 | [Storage Account with No Public Surface](tier-1-foundations/lab-05-storage-no-public-surface/) | Ready |
+| 06 | [Key Vault with RBAC and Identity-Only Access](tier-1-foundations/lab-06-key-vault-rbac-identity-only/) | Ready |
+| 07 | [Application Gateway with WAF in Front of a Private App](tier-1-foundations/lab-07-app-gateway-waf-private-app/) | Ready |
+| 08 | [Egress Control with Azure Firewall](tier-1-foundations/lab-08-egress-control-azure-firewall/) | Ready |
+| 09 | [Terraform Remote State Done Properly](tier-1-foundations/lab-09-terraform-remote-state/) | Ready |
+| 10 | [Secretless Pipelines with Workload Identity Federation](tier-1-foundations/lab-10-secretless-pipelines-oidc/) | Ready |
+| 11 | [Gated Infrastructure Deployment with Preview](tier-1-foundations/lab-11-gated-deployment-preview/) | Ready |
+| 12 | [Private AKS Cluster](tier-1-foundations/lab-12-private-aks-cluster/) | Ready |
+| 13 | [Self-Hosted Build Agents Inside a Private Network](tier-1-foundations/lab-13-self-hosted-build-agents/) | Ready |
+| 14 | [Diagnostics Enforced by Policy](tier-1-foundations/lab-14-diagnostics-enforced-by-policy/) | Ready |
 
 ---
 

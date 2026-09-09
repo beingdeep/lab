@@ -1,0 +1,14 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab11"
+
+# Fixed suffix for the globally unique storage account name.
+# name_suffix = "deep11"
+
+# Step 7. Set true and run "terraform plan" to produce a plan that REPLACES the
+# storage account instead of updating it - the plan then reports "1 to destroy".
+# Read the artefact, find that line among all the others, and reject it. Then go
+# and automate the check so nobody has to spot it by eye.
+# simulate_destructive_change = false

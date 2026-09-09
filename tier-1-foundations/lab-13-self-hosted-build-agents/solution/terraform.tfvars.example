@@ -1,0 +1,33 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab13"
+# vnet_name           = "vnet-lab13"
+# scale_set_name      = "vmss-agents"
+
+# Fixed suffix for the globally unique container registry name.
+# name_suffix = "deep13"
+
+# SSH public key for the agents. Leave empty to read ~/.ssh/id_rsa.pub. There is
+# no password option, on purpose.
+# admin_ssh_public_key = "ssh-rsa AAAA..."
+
+# Autoscale floor and ceiling. Zero costs nothing when idle but makes the first
+# build of the day wait for a machine to boot and register.
+# min_instances = 1
+# max_instances = 5
+
+# Everything outside the VNet the agents may reach. Service tags, not addresses -
+# Microsoft updates the ranges behind them without notice.
+# allowed_service_tags = [
+#   "AzureActiveDirectory",
+#   "AzureDevOps",
+#   "AzureContainerRegistry",
+#   "Storage",
+# ]
+
+# Set true to drop the outbound restrictions entirely, which is the state most
+# self-hosted agent fleets are actually in. On machines that run untrusted pull
+# request code.
+# allow_all_egress = false
