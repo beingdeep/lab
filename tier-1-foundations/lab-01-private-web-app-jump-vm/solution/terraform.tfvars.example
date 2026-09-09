@@ -1,0 +1,18 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab01"
+# vnet_name           = "vnet-lab01"
+# jump_vm_name        = "vm-jump"
+
+# Fixed suffix for the globally unique names, instead of a random one.
+# name_suffix = "deep01"
+
+# Hand the SQL Entra admin role to someone other than whoever runs Terraform.
+# entra_admin_login     = "you@example.com"
+# entra_admin_object_id = "00000000-0000-0000-0000-000000000000"
+
+# Set to false to skip Azure Bastion. You will not be able to sign in to the
+# jump VM, but every network check in validate.ps1 still works.
+# deploy_bastion = true

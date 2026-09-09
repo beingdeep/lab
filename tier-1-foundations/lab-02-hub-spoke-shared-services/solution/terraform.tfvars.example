@@ -1,0 +1,21 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab02"
+
+# hub_vnet_name          = "vnet-hub"
+# app_spoke_vnet_name    = "vnet-spoke-app"
+# shared_spoke_vnet_name = "vnet-spoke-shared"
+
+# hub_address_space          = "10.0.0.0/16"
+# app_spoke_address_space    = "10.1.0.0/16"
+# shared_spoke_address_space = "10.2.0.0/16"
+
+# Build the broken, non-transitive state from Step 5 so you can look at the
+# effective routes yourself. No firewall, no route tables, no rules.
+# deploy_firewall = false
+
+# Skip the two test VMs and Bastion if you only want to inspect configuration.
+# deploy_test_vms = true
+# deploy_bastion  = true

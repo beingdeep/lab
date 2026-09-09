@@ -1,0 +1,16 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab06"
+# vnet_name           = "vnet-lab06"
+
+# Fixed suffix for the globally unique vault name.
+# name_suffix = "deep06"
+
+# Step 8: set to false and re-apply to remove the application's role assignment
+# without touching anything else. Then time how long the app keeps working on
+# its cached token before it starts failing.
+# grant_app_identity = true
+
+# deploy_bastion = true

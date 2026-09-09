@@ -1,0 +1,25 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location                = "westeurope"
+# resource_group_name     = "rg-lab03"
+# dns_resource_group_name = "rg-lab03-dns"
+
+# Rename or re-address the three networks. Ranges must not overlap.
+# vnets = {
+#   "vnet-a" = { address_space = "10.0.0.0/16" }
+#   "vnet-b" = { address_space = "10.1.0.0/16" }
+#   "vnet-c" = { address_space = "10.2.0.0/16" }
+# }
+
+# Fixed suffix for the globally unique service names, instead of a random one.
+# name_suffix = "deep03"
+
+# Step 10. Set to true and apply again to remove vnet-c's link to the blob zone.
+# vm-c then resolves the storage account to its public address while vm-a and
+# vm-b still resolve it privately, and nothing anywhere reports an error.
+# Set back to false and apply to repair it.
+# break_vnet_c_blob_link = false
+
+# Skip the three test VMs if you only want to inspect configuration.
+# deploy_test_vms = true

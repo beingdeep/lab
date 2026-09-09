@@ -1,0 +1,19 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab04"
+# vnet_name           = "vnet-lab04"
+# vnet_address_space  = "10.40.0.0/16"
+
+# Raise this and re-apply. The new web servers pick up every rule the moment
+# their NICs join asg-web, and not one rule changes.
+# web_instance_count = 2
+
+# Build the trap: allow rules present, deny rules absent. AllowVnetInBound at
+# priority 65000 then lets the web tier reach the database directly and nothing
+# looks wrong anywhere. Worth seeing once before you believe the deny rules
+# matter.
+# deploy_deny_rules = true
+
+# deploy_bastion = true

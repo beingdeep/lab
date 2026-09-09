@@ -1,0 +1,24 @@
+# Copy to terraform.tfvars and edit if you want to change anything.
+# Every value here already has a sensible default - the file is optional.
+
+# location            = "westeurope"
+# resource_group_name = "rg-lab05"
+# vnet_name           = "vnet-lab05"
+# container_name      = "app-data"
+
+# Fixed suffix for the globally unique storage account name.
+# name_suffix = "deep05"
+
+# Leave false. Set true to see the hole: the data-plane role assignments are
+# still there and still correct, and anyone who can read the account keys
+# bypasses all of them without appearing as anybody in the audit log.
+# allow_shared_key_access = false
+
+# Scope the app's data role to the container instead of the whole account.
+# scope_role_to_container = true
+
+# Give whoever runs Terraform Storage Blob Data Reader so the portal data
+# browser works from inside the VNet.
+# grant_current_user_data_reader = true
+
+# deploy_bastion = true
